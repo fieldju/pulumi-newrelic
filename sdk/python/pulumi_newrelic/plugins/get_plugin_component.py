@@ -6,7 +6,8 @@ import warnings
 import pulumi
 import pulumi.runtime
 from typing import Union
-from .. import utilities, tables
+from .. import _utilities, _tables
+
 
 class GetPluginComponentResult:
     """
@@ -31,6 +32,8 @@ class GetPluginComponentResult:
         if plugin_id and not isinstance(plugin_id, float):
             raise TypeError("Expected argument 'plugin_id' to be a float")
         __self__.plugin_id = plugin_id
+
+
 class AwaitableGetPluginComponentResult(GetPluginComponentResult):
     # pylint: disable=using-constant-test
     def __await__(self):
@@ -42,52 +45,21 @@ class AwaitableGetPluginComponentResult(GetPluginComponentResult):
             name=self.name,
             plugin_id=self.plugin_id)
 
-def get_plugin_component(name=None,plugin_id=None,opts=None):
+
+def get_plugin_component(name=None, plugin_id=None, opts=None):
     """
-    Use this data source to get information about a single plugin component in New Relic that already exists.
-
-    Each plugin component reporting into to New Relic is assigned a unique ID. Once you have a plugin component reporting data into your account, its component ID can be used to create Plugins alert conditions.
-
-    ## Example Usage
-
-    ```python
-    import pulumi
-    import pulumi_newrelic as newrelic
-
-    foo_plugin = newrelic.plugins.get_plugin(guid="com.example.my-plugin")
-    foo_plugin_component = newrelic.plugins.get_plugin_component(plugin_id=foo_plugin.id,
-        name="My Plugin Component")
-    foo_alert_policy = newrelic.AlertPolicy("fooAlertPolicy")
-    foo_alert_condition = newrelic.plugins.AlertCondition("fooAlertCondition",
-        policy_id=foo_alert_policy.id,
-        metric="Component/Summary/Consumers[consumers]",
-        plugin_id=foo_plugin.id,
-        plugin_guid=foo_plugin.guid,
-        entities=[foo_plugin_component.id],
-        value_function="average",
-        metric_description="Queue consumers",
-        terms=[{
-            "duration": 5,
-            "operator": "below",
-            "priority": "critical",
-            "threshold": "0.75",
-            "timeFunction": "all",
-        }])
-    ```
-
+    Use this data source to access information about an existing resource.
 
     :param str name: The name of the plugin component.
     :param float plugin_id: The ID of the plugin instance this component belongs to.
     """
     __args__ = dict()
-
-
     __args__['name'] = name
     __args__['pluginId'] = plugin_id
     if opts is None:
         opts = pulumi.InvokeOptions()
     if opts.version is None:
-        opts.version = utilities.get_version()
+        opts.version = _utilities.get_version()
     __ret__ = pulumi.runtime.invoke('newrelic:plugins/getPluginComponent:getPluginComponent', __args__, opts=opts).value
 
     return AwaitableGetPluginComponentResult(

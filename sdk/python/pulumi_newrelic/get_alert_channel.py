@@ -6,7 +6,8 @@ import warnings
 import pulumi
 import pulumi.runtime
 from typing import Union
-from . import utilities, tables
+from . import _utilities, _tables
+
 
 class GetAlertChannelResult:
     """
@@ -40,6 +41,8 @@ class GetAlertChannelResult:
         """
         Alert channel type, either: `email`, `opsgenie`, `pagerduty`, `slack`, `victorops`, or `webhook`.
         """
+
+
 class AwaitableGetAlertChannelResult(GetAlertChannelResult):
     # pylint: disable=using-constant-test
     def __await__(self):
@@ -52,36 +55,19 @@ class AwaitableGetAlertChannelResult(GetAlertChannelResult):
             policy_ids=self.policy_ids,
             type=self.type)
 
-def get_alert_channel(name=None,opts=None):
+
+def get_alert_channel(name=None, opts=None):
     """
-    Use this data source to get information about a specific alert channel in New Relic that already exists.
-
-    ## Example Usage
-
-    ```python
-    import pulumi
-    import pulumi_newrelic as newrelic
-
-    foo_alert_channel = newrelic.get_alert_channel(name="foo@example.com")
-    # Resource
-    foo_alert_policy = newrelic.AlertPolicy("fooAlertPolicy")
-    # Using the data source and resource together
-    foo_alert_policy_channel = newrelic.AlertPolicyChannel("fooAlertPolicyChannel",
-        policy_id=foo_alert_policy.id,
-        channel_id=foo_alert_channel.id)
-    ```
-
+    Use this data source to access information about an existing resource.
 
     :param str name: The name of the alert channel in New Relic.
     """
     __args__ = dict()
-
-
     __args__['name'] = name
     if opts is None:
         opts = pulumi.InvokeOptions()
     if opts.version is None:
-        opts.version = utilities.get_version()
+        opts.version = _utilities.get_version()
     __ret__ = pulumi.runtime.invoke('newrelic:index/getAlertChannel:getAlertChannel', __args__, opts=opts).value
 
     return AwaitableGetAlertChannelResult(

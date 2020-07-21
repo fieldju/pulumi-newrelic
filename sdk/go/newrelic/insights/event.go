@@ -10,66 +10,6 @@ import (
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
-// Use this resource to create one or more Insights events.
-//
-// ## Example Usage
-//
-// ```go
-// package main
-//
-// import (
-// 	"github.com/pulumi/pulumi-newrelic/sdk/v3/go/newrelic/insights"
-// 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
-// )
-//
-// func main() {
-// 	pulumi.Run(func(ctx *pulumi.Context) error {
-// 		_, err := insights.NewEvent(ctx, "foo", &insights.EventArgs{
-// 			Events: insights.EventEventArray{
-// 				&insights.EventEventArgs{
-// 					Attributes: insights.EventEventAttributeArray{
-// 						&insights.EventEventAttributeArgs{
-// 							Key:   pulumi.String("a_string_attribute"),
-// 							Value: pulumi.String("a string"),
-// 						},
-// 						&insights.EventEventAttributeArgs{
-// 							Key:   pulumi.String("an_integer_attribute"),
-// 							Type:  pulumi.String("int"),
-// 							Value: pulumi.String("42"),
-// 						},
-// 						&insights.EventEventAttributeArgs{
-// 							Key:   pulumi.String("a_float_attribute"),
-// 							Type:  pulumi.String("float"),
-// 							Value: pulumi.String("101.1"),
-// 						},
-// 					},
-// 					Timestamp: pulumi.Int(1232471100),
-// 					Type:      pulumi.String("MyEvent"),
-// 				},
-// 			},
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-// 		return nil
-// 	})
-// }
-// ```
-// ## Events
-//
-// The `event` mapping supports the following arguments:
-//
-//   * `type` - (Required) The event's name. Can be a combination of alphanumeric characters, underscores, and colons.
-//   * `timestamp` - (Optional) Must be a Unix epoch timestamp. You can define timestamps either in seconds or in milliseconds.
-//   * `attribute` - (Required) An attribute to include in your event payload. Multiple attribute blocks can be defined for an event. See Attributes below for details.
-//
-// ### Attributes
-//
-// The `attribute` mapping supports the following arguments:
-//
-//   * `key` - (Required) The name of the attribute.
-//   * `value` - (Required) The value of the attribute.
-//   * `type` - (Optional) Specify the type for the attribute value. This is useful when passing integer or float values to Insights. Allowed values are `string`, `int`, or `float`. Defaults to `string`.
 type Event struct {
 	pulumi.CustomResourceState
 

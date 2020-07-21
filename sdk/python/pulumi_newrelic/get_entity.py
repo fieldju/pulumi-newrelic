@@ -6,7 +6,8 @@ import warnings
 import pulumi
 import pulumi.runtime
 from typing import Union
-from . import utilities, tables
+from . import _utilities, _tables
+
 
 class GetEntityResult:
     """
@@ -49,6 +50,8 @@ class GetEntityResult:
         if type and not isinstance(type, str):
             raise TypeError("Expected argument 'type' to be a str")
         __self__.type = type
+
+
 class AwaitableGetEntityResult(GetEntityResult):
     # pylint: disable=using-constant-test
     def __await__(self):
@@ -64,39 +67,10 @@ class AwaitableGetEntityResult(GetEntityResult):
             tag=self.tag,
             type=self.type)
 
-def get_entity(domain=None,name=None,tag=None,type=None,opts=None):
+
+def get_entity(domain=None, name=None, tag=None, type=None, opts=None):
     """
-    Use this data source to get information about a specific entity in New Relic One that already exists.
-
-    ## Example Usage
-
-    ```python
-    import pulumi
-    import pulumi_newrelic as newrelic
-
-    app = newrelic.get_entity(name="my-app",
-        domain="APM",
-        type="APPLICATION",
-        tag={
-            "key": "my-tag",
-            "value": "my-tag-value",
-        })
-    foo_alert_policy = newrelic.AlertPolicy("fooAlertPolicy")
-    foo_alert_condition = newrelic.AlertCondition("fooAlertCondition",
-        policy_id=foo_alert_policy.id,
-        type="apm_app_metric",
-        entities=[data["newrelic_application"]["app"]["application_id"]],
-        metric="apdex",
-        runbook_url="https://www.example.com",
-        terms=[{
-            "duration": 5,
-            "operator": "below",
-            "priority": "critical",
-            "threshold": "0.75",
-            "timeFunction": "all",
-        }])
-    ```
-
+    Use this data source to access information about an existing resource.
 
     :param str domain: The entity's domain. Valid values are APM, BROWSER, INFRA, MOBILE, and SYNTH.
     :param str name: The name of the entity in New Relic One.  The first entity matching this name for the given search parameters will be returned.
@@ -108,8 +82,6 @@ def get_entity(domain=None,name=None,tag=None,type=None,opts=None):
       * `value` (`str`)
     """
     __args__ = dict()
-
-
     __args__['domain'] = domain
     __args__['name'] = name
     __args__['tag'] = tag
@@ -117,7 +89,7 @@ def get_entity(domain=None,name=None,tag=None,type=None,opts=None):
     if opts is None:
         opts = pulumi.InvokeOptions()
     if opts.version is None:
-        opts.version = utilities.get_version()
+        opts.version = _utilities.get_version()
     __ret__ = pulumi.runtime.invoke('newrelic:index/getEntity:getEntity', __args__, opts=opts).value
 
     return AwaitableGetEntityResult(

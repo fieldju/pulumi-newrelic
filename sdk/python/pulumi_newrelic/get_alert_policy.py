@@ -6,7 +6,8 @@ import warnings
 import pulumi
 import pulumi.runtime
 from typing import Union
-from . import utilities, tables
+from . import _utilities, _tables
+
 
 class GetAlertPolicyResult:
     """
@@ -43,6 +44,8 @@ class GetAlertPolicyResult:
         """
         The time the policy was last updated.
         """
+
+
 class AwaitableGetAlertPolicyResult(GetAlertPolicyResult):
     # pylint: disable=using-constant-test
     def __await__(self):
@@ -56,37 +59,22 @@ class AwaitableGetAlertPolicyResult(GetAlertPolicyResult):
             name=self.name,
             updated_at=self.updated_at)
 
-def get_alert_policy(account_id=None,incident_preference=None,name=None,opts=None):
+
+def get_alert_policy(account_id=None, incident_preference=None, name=None, opts=None):
     """
-    Use this data source to get information about a specific alert policy in New Relic that already exists.
-
-    ## Example Usage
-
-    ```python
-    import pulumi
-    import pulumi_newrelic as newrelic
-
-    foo_alert_channel = newrelic.get_alert_channel(name="foo@example.com")
-    foo_alert_policy = newrelic.get_alert_policy(name="foo policy")
-    foo_alert_policy_channel = newrelic.AlertPolicyChannel("fooAlertPolicyChannel",
-        policy_id=foo_alert_policy.id,
-        channel_id=foo_alert_channel.id)
-    ```
-
+    Use this data source to access information about an existing resource.
 
     :param str incident_preference: The rollup strategy for the policy. Options include: PER_POLICY, PER_CONDITION, or PER_CONDITION_AND_TARGET. The default is PER_POLICY.
     :param str name: The name of the alert policy in New Relic.
     """
     __args__ = dict()
-
-
     __args__['accountId'] = account_id
     __args__['incidentPreference'] = incident_preference
     __args__['name'] = name
     if opts is None:
         opts = pulumi.InvokeOptions()
     if opts.version is None:
-        opts.version = utilities.get_version()
+        opts.version = _utilities.get_version()
     __ret__ = pulumi.runtime.invoke('newrelic:index/getAlertPolicy:getAlertPolicy', __args__, opts=opts).value
 
     return AwaitableGetAlertPolicyResult(

@@ -13,8 +13,27 @@ namespace Pulumi.NewRelic
     /// Use this resource to create and manage New Relic alert policies.
     /// 
     /// ## Example Usage
-    /// ### Provision multiple notification channels and add those channels to a policy
     /// 
+    /// ```csharp
+    /// using Pulumi;
+    /// using NewRelic = Pulumi.NewRelic;
+    /// 
+    /// class MyStack : Stack
+    /// {
+    ///     public MyStack()
+    ///     {
+    ///         var foo = new NewRelic.AlertPolicy("foo", new NewRelic.AlertPolicyArgs
+    ///         {
+    ///             IncidentPreference = "PER_POLICY",
+    ///         });
+    ///     }
+    /// 
+    /// }
+    /// ```
+    /// See additional examples.
+    /// ## Additional Examples
+    /// 
+    /// ##### Provision multiple notification channels and add those channels to a policy
     /// ```csharp
     /// using Pulumi;
     /// using NewRelic = Pulumi.NewRelic;
@@ -57,7 +76,9 @@ namespace Pulumi.NewRelic
     /// 
     /// }
     /// ```
-    /// ### Reference existing notification channels and add those channel to a policy
+    /// &lt;br&gt;
+    /// 
+    /// ##### Reference existing notification channels and add those channel to a policy
     /// ```csharp
     /// using Pulumi;
     /// using NewRelic = Pulumi.NewRelic;

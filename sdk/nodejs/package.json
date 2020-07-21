@@ -1,6 +1,6 @@
 {
     "name": "@pulumi/newrelic",
-    "version": "${VERSION}",
+    "version": "3.1.0-RC1",
     "description": "A Pulumi package for creating and managing New Relic resources.",
     "keywords": [
         "pulumi",

@@ -4,22 +4,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
-/**
- * Use this resource to create, update, and delete New Relic Events to Metrics rules.
- *
- * ## Example Usage
- *
- * ```typescript
- * import * as pulumi from "@pulumi/pulumi";
- * import * as newrelic from "@pulumi/newrelic";
- *
- * const foo = new newrelic.EventsToMetricsRule("foo", {
- *     accountId: 12345,
- *     description: "Example description",
- *     nrql: "SELECT uniqueCount(account_id) AS ``Transaction.account_id`` FROM Transaction FACET appName, name",
- * });
- * ```
- */
 export class EventsToMetricsRule extends pulumi.CustomResource {
     /**
      * Get an existing EventsToMetricsRule resource's state with the given name, ID, and optional extra

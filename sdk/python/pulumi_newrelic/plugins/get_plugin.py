@@ -6,7 +6,8 @@ import warnings
 import pulumi
 import pulumi.runtime
 from typing import Union
-from .. import utilities, tables
+from .. import _utilities, _tables
+
 
 class GetPluginResult:
     """
@@ -22,6 +23,8 @@ class GetPluginResult:
         """
         The ID of the installed plugin instance.
         """
+
+
 class AwaitableGetPluginResult(GetPluginResult):
     # pylint: disable=using-constant-test
     def __await__(self):
@@ -31,47 +34,19 @@ class AwaitableGetPluginResult(GetPluginResult):
             guid=self.guid,
             id=self.id)
 
-def get_plugin(guid=None,opts=None):
+
+def get_plugin(guid=None, opts=None):
     """
-    Use this data source to get information about a specific installed plugin in New Relic.
-
-    Each plugin published to New Relic's Plugin Central is assigned a [GUID](https://docs.newrelic.com/docs/plugins/plugin-developer-resources/planning-your-plugin/parts-plugin#guid). Once you have installed a plugin into your account it is assigned an ID. This account-specific ID is required when creating Plugins alert conditions.
-
-    ## Example Usage
-
-    ```python
-    import pulumi
-    import pulumi_newrelic as newrelic
-
-    foo_plugin = newrelic.plugins.get_plugin(guid="com.example.my-plugin")
-    foo_alert_policy = newrelic.AlertPolicy("fooAlertPolicy")
-    foo_alert_condition = newrelic.plugins.AlertCondition("fooAlertCondition",
-        policy_id=foo_alert_policy.id,
-        metric="Component/Summary/Consumers[consumers]",
-        plugin_id=foo_plugin.id,
-        plugin_guid=foo_plugin.guid,
-        value_function="average",
-        metric_description="Queue consumers",
-        terms=[{
-            "duration": 5,
-            "operator": "below",
-            "priority": "critical",
-            "threshold": "0.75",
-            "timeFunction": "all",
-        }])
-    ```
-
+    Use this data source to access information about an existing resource.
 
     :param str guid: The GUID of the plugin in New Relic.
     """
     __args__ = dict()
-
-
     __args__['guid'] = guid
     if opts is None:
         opts = pulumi.InvokeOptions()
     if opts.version is None:
-        opts.version = utilities.get_version()
+        opts.version = _utilities.get_version()
     __ret__ = pulumi.runtime.invoke('newrelic:plugins/getPlugin:getPlugin', __args__, opts=opts).value
 
     return AwaitableGetPluginResult(
